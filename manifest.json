@@ -1,0 +1,36 @@
+{
+    "manifest_version": 3,
+    "name": "动态视频背景",
+    "version": "1.3",
+    "description": "提供可配置的动态视频背景。",
+    "permissions": [
+      "storage",
+      "scripting" 
+    ],
+    "host_permissions": [
+      "<all_urls>"
+    ],
+    "background": {
+      "service_worker": "background.js"
+    },
+    "action": {
+      "default_popup": "popup.html",
+      "default_icon": {
+        "16": "icons/16x16.png",
+        "32": "icons/32x32.png",
+        "64": "icons/64x64.png"
+      }
+    },
+    "content_scripts": [
+      {
+        "matches": ["<all_urls>"],
+        "js": ["content.js"]
+      }
+    ],
+    "web_accessible_resources": [
+      {
+        "resources": ["background.webm"],
+        "matches": ["<all_urls>"]
+      }
+    ]
+}

@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <title>动态背景设置</title>
+  <link rel="stylesheet" href="popup.css">
+  <meta charset="UTF-8"> 
+</head>
+<body>
+
+<div class="container">
+  
+  <div class="header">
+    <h2>动态背景设置</h2>
+  </div>
+
+  <div class="setting-item">
+    <label for="masterSwitch">启用动态背景</label>
+    <label class="switch">
+      <input type="checkbox" id="masterSwitch">
+      <span class="slider round"></span>
+    </label>
+  </div>
+
+  <div class="setting-item">
+    <label for="imgSwitch">强力去除背景（注意可能会导致部分图标丢失）</label>
+    <label class="switch">
+      <input type="checkbox" id="imgSwitch">
+      <span class="slider round"></span>
+    </label>
+  </div>
+  <hr>
+
+  <div class="setting-item column">
+    <div class="label-group">
+      <label for="opacitySlider">页面内容不透明度</label>
+      <span id="opacityValue">100%</span>
+    </div>
+    <input type="range" id="opacitySlider" min="10" max="100" value="100">
+  </div>
+  
+  <div class="setting-item column">
+    <div class="label-group">
+      <label for="Video_opacitySlider">视频背景不透明度</label>
+      <span id="Video_opacityValue">30%</span>
+    </div>
+    <input type="range" id="Video_opacitySlider" min="0" max="100" value="30">
+  </div>
+
+  <hr>
+
+  <div class="setting-item column">
+    <label for="videoUrlInput">自定义视频 URL</label>
+    <span class="description">留空则使用默认视频，暂不支持本地文件。</span>
+    <div class="input-group">
+      <input type="text" id="videoUrlInput" placeholder="http://... 或 https://...">
+      <button id="saveButton">保存</button>
+    </div>
+  </div>
+
+</div>
+
+<script src="popup.js"></script>
+</body>
+</html>
