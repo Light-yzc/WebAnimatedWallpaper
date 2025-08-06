@@ -16,6 +16,9 @@
 ![alt text](/img/image.png)
 ![alt text](/img/image-1.png)
 ![alt text](/img/image-2.png)
+## 更新日志
+ - ver1.4 新增本地上传视频入口
+ ![alt text](/img//image-3.png)
 ## 许可证
 MIT License - 详见[LICENSE](LICENSE)文件
 ---

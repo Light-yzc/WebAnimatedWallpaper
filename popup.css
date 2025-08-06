@@ -182,3 +182,47 @@
   #saveButton.saved {
     background-color: var(--success-color);
   }
+  .file-upload-wrapper {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-top: 5px;
+  }
+  
+  /* 隐藏原始的文件上传输入框 */
+  #video-upload {
+    display: none;
+  }
+  
+  /* 自定义上传按钮 (用 label 伪装) */
+  .file-upload-label {
+    display: inline-flex; /* 使用 flex 布局让图标和文字对齐 */
+    align-items: center;
+    gap: 8px; /* 图标和文字的间距 */
+    background-color: var(--panel-color);
+    color: var(--text-color);
+    border: 1px solid var(--border-color);
+    padding: 8px 16px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-weight: 500;
+    transition: background-color .3s, border-color .3s;
+  }
+  
+  .file-upload-label:hover {
+    background-color: #4a505c; /* 悬停时加深背景色 */
+    border-color: var(--accent-color);
+  }
+  
+  /* 显示文件名的区域样式 */
+  .file-name {
+    flex-grow: 1; /* 占据剩余空间 */
+    font-size: 0.9em;
+    color: var(--text-color-secondary);
+    background-color: var(--bg-color);
+    padding: 8px 12px;
+    border-radius: 8px;
+    white-space: nowrap; /* 防止文件名换行 */
+    overflow: hidden; /* 溢出部分隐藏 */
+    text-overflow: ellipsis; /* 用省略号代替溢出文本 */
+  }

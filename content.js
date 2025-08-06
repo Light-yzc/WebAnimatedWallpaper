@@ -10,9 +10,7 @@ function applyEffects(settings, pageTheme) {
   if (!styleElement) {
     styleElement = document.createElement('style');
     document.head.appendChild(styleElement);
-  }
-//   console.log(pageTheme)
-  const backgroundAlpha = 1 - ((settings.video_opacity || 100) / 100);
+  }  const backgroundAlpha = 1 - ((settings.video_opacity || 100) / 100);
   const opacity = settings.opacity / 100;
   styleElement.textContent = `
     body > *:not(#video-background):not(style):not(script) {
@@ -97,7 +95,7 @@ function findEffectiveBackgroundColor(element) {
       .filter(el => el.textContent.trim().length > 10) // 只选择有一定文本内容的元素
       .slice(0, 15); // 最多取前15个样本，防止性能问题
     if (samples.length === 0) {
-    //   console.log("No suitable text samples found. use contrast.");
+      // console.log("No suitable text samples found. use contrast.");
       return contrast_detectPageTheme()
     }
   
@@ -154,13 +152,20 @@ function contrast_detectPageTheme() {
 }
 
 function removeEffects() {
-    if (videoElement) {
-        videoElement.remove();
-        videoElement = null;
-      }
+  if (videoElement) {
+      videoElement.pause();
+      videoElement.src = ''; 
+      videoElement.load(); 
+      videoElement.remove();
+      videoElement = null;
+  }
+  if (overlayElement) {
+      overlayElement.remove();
+      overlayElement = null;
+  }
   if (styleElement) {
-    styleElement.remove();
-    styleElement = null;
+      styleElement.remove();
+      styleElement = null;
   }
 }
 
@@ -173,23 +178,38 @@ document.addEventListener('visibilitychange', () => {
     }
   });
 
-chrome.storage.sync.get(['isEnabled', 'opacity','video_opacity', 'videoUrl'], (settings) => {
-  currentSettings = settings;
-  if (settings.isEnabled) {
-    pageTheme = detectPageTheme()
-    applyEffects(currentSettings, pageTheme); 
-  }
-});
 
 chrome.storage.onChanged.addListener((changes, namespace) => {
-  for (let [key, { oldValue, newValue }] of Object.entries(changes)) {
-    currentSettings[key] = newValue; 
-  }
+  handle_change_with_promise().then(result => {
+    // console.log('Promise 完成了，结果是: ' + result);
+    if (!result) {
+      removeEffects();
+    }
+  });
 
-  if (currentSettings.isEnabled) {
-    applyEffects(currentSettings, pageTheme); 
-  } else {
-    removeEffects(); 
-  }
 });
 
+function handle_change_with_promise() {
+  return new Promise(resolve => { // 返回一个 Promise 对象
+    chrome.storage.sync.get(['isEnabled', 'opacity','video_opacity', 'videoUrl'], (settings) => {
+      currentSettings = settings;
+      if (settings.isEnabled) {
+        if (!pageTheme) {
+          pageTheme = detectPageTheme();
+        }
+        chrome.storage.local.get('videoDataUrl', (video_file) => {
+          if (video_file.videoDataUrl){
+            currentSettings.videoUrl = video_file.videoDataUrl;
+          }
+          applyEffects(currentSettings, pageTheme); 
+          
+          resolve(true); 
+        });
+      } else {
+        resolve(false); 
+      }
+    });
+  });
+}
+
+handle_change_with_promise()
