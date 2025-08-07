@@ -6,20 +6,35 @@ document.addEventListener('DOMContentLoaded', () => {
     const Video_opacityValue = document.getElementById('Video_opacityValue');
     const videoUrlInput = document.getElementById('videoUrlInput');
     const saveButton = document.getElementById('saveButton');
-    const imgSwitch = document.getElementById('imgSwitch');
+    const bgSwitch = document.getElementById('bgSwitch');
     const videoUpload = document.getElementById('video-upload');
     const fileNameDisplay = document.getElementById('file-name-display');
     const FIVE_MEGABYTES = 5 * 1024 * 1024; // 定义5MB的大小（单位：字节）
     
 
     // 1. 初始化：打开popup时，从storage加载并显示当前设置
-    chrome.storage.sync.get(['isEnabled', 'opacity', 'img_isEnabled', 'video_opacity', 'videoUrl'], (result) => {
+    chrome.storage.sync.get(['isEnabled', 'opacity', 'img_isEnabled', 'bg_isEnabled', 'video_opacity', 'videoUrl'], (result) => {
       console.log('?????' + result)
       masterSwitch.checked = !!result.isEnabled;
-      imgSwitch.checked = !!result.img_isEnabled;
-      opacitySlider.value = result.opacity || 80;
+      bgSwitch.checked = !!result.bg_isEnabled;
+      if (!result.opacity){
+        opacitySlider.value = 15;
+        chrome.storage.sync.set({ opacity: 15 });
+      }
+      else{
+        opacitySlider.value = result.opacity
+      }
+      
       opacityValue.textContent = `${opacitySlider.value}%`;
-      Video_opacitySlider.value = result.video_opacity || 10;
+
+      if (!result.video_opacity){
+        Video_opacitySlider.value = 15;
+        chrome.storage.sync.set({ video_opacity: 15 });
+      }
+      else{
+        Video_opacitySlider.value = result.video_opacity
+      }
+      
       Video_opacityValue.textContent = `${Video_opacitySlider.value}%`;
       videoUrlInput.value = result.videoUrl || '';
       display_info(fileNameDisplay);
@@ -29,10 +44,12 @@ document.addEventListener('DOMContentLoaded', () => {
     masterSwitch.addEventListener('change', () => {
       chrome.storage.sync.set({ isEnabled: masterSwitch.checked });
     });
-    imgSwitch.addEventListener('change', () => {
-        console.log('已经保存')
-        chrome.storage.sync.set({ img_isEnabled: imgSwitch.checked });
+
+
+    bgSwitch.addEventListener('change', () => {
+        chrome.storage.sync.set({ bg_isEnabled: bgSwitch.checked });
       });
+
     opacitySlider.addEventListener('input', () => {
       opacityValue.textContent = `${opacitySlider.value}%`;
     });
@@ -51,7 +68,6 @@ document.addEventListener('DOMContentLoaded', () => {
     saveButton.addEventListener('click', () => {
       if (!videoUrlInput.value) chrome.storage.local.set({'videoDataUrl': null})
       chrome.storage.sync.set({ videoUrl: videoUrlInput.value });
-      console.log('23323333' + videoUrlInput.value )
       saveButton.textContent = "已保存!";
       display_info(fileNameDisplay);
       setTimeout(() => { saveButton.textContent = "保存"; }, 1000);

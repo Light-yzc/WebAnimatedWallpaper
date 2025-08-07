@@ -13,12 +13,15 @@
 ## 注意事项
 ⚠️ **内存占用提示**：启用动态背景的内存可能比不启用占用稍高，待后续优化....
 ## 效果展示
+![alt text](/img/image-4.png)
 ![alt text](/img/image.png)
 ![alt text](/img/image-1.png)
 ![alt text](/img/image-2.png)
 ## 更新日志
- - ver1.4 新增本地上传视频入口
+ - ### ver1.4 新增本地上传视频入口 
  ![alt text](/img//image-3.png)
+ ---
+ - ### ver1.5 对页面页面内容不透明度逻辑进行了调整，现在不再单纯使用opacity调整透明度而是rgba，经测试页面内容透明度为15， 视频背景透明度为35效果最好
+
 ## 许可证
-MIT License - 详见[LICENSE](LICENSE)文件
----
+### MIT License - 详见[LICENSE](LICENSE)文件

@@ -1,8 +1,3 @@
-const TRANSPARENT_CSS = `
-  *:not(#video-overlay) {
-    background-color: transparent !important;
-  }
-`;
 const TRANSPARENT_CSS_NO_IMG = `
   *:not(#video-overlay) {
     background: none !important;
@@ -26,51 +21,44 @@ async function applyOrRemoveCss(tabId, CSS, isEnabled) {
 
 chrome.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
   if (changeInfo.status === 'complete') {
-    chrome.storage.sync.get('isEnabled', (result) => {
-      if (result.isEnabled) {
-        chrome.storage.sync.get('img_isEnabled', (result_) => {
-            if (result_.img_isEnabled) {
-              console.log(`Page refreshed/loaded. Applying CSS to tab ${tabId}.`);
-              applyOrRemoveCss(tabId, TRANSPARENT_CSS_NO_IMG, true);
-            }
-            else{
-              console.log(`Page refreshed/loaded. Applying CSS to tab ${tabId}.`);
-              applyOrRemoveCss(tabId, TRANSPARENT_CSS, true);
-            }
-      });
-  }
-});
+  handle_change(tabId);
   }
 });
 
 
 chrome.storage.onChanged.addListener(async (changes, namespace) => {
-  if (changes.isEnabled) {
-    const isEnabled = changes.isEnabled.newValue;
-    const [tab] = await chrome.tabs.query({ active: true, currentWindow: true });
-    if (!tab || !tab.id) return;
-    
-    chrome.storage.sync.get('img_isEnabled', (result_) => {
-        let cur_css = null
-        console.log(`Setting changed. isEnabled is now ${isEnabled},img_enabel:${result_.img_isEnabled}. Updating active tab.`);
-        result_.img_isEnabled? cur_css = TRANSPARENT_CSS_NO_IMG: cur_css = TRANSPARENT_CSS
-        console.log(`curcss${cur_css}`)
-        isEnabled? applyOrRemoveCss(tab.id, cur_css, true): applyOrRemoveCss(tab.id, cur_css, false)
-  })
-  }
-  else if (changes.img_isEnabled) {
-    const img_isEnabled = changes.img_isEnabled.newValue;
-    const [tab] = await chrome.tabs.query({ active: true, currentWindow: true });
-    if (!tab || !tab.id) return;
-    chrome.storage.sync.get('isEnabled', (result_) => {
-        let cur_css = null
-        const isEnabled = result_.isEnabled
-        console.log(`Setting changed. isEnabled is now ${isEnabled},img_enabel:${img_isEnabled}. Updating active tab.`);
-        img_isEnabled? cur_css = TRANSPARENT_CSS_NO_IMG: cur_css = TRANSPARENT_CSS
-        console.log(`curcss${cur_css}`)
-        applyOrRemoveCss(tab.id, TRANSPARENT_CSS_NO_IMG, false)
-        isEnabled? applyOrRemoveCss(tab.id, cur_css, true): applyOrRemoveCss(tab.id, cur_css, false)
-  })
+  if (namespace !== 'sync') return;
+  const [tab] = await chrome.tabs.query({ active: true, currentWindow: true });
+  if (!tab || !tab.id) return;
+  console.log(tab.id)
+  for (let key of ['isEnabled','bg_isEnabled']) {
+    if (changes[key]) {
+      const { oldValue, newValue } = changes[key];
+      console.log(`键 "${key}" 发生变化：`, { oldValue, newValue });
+      // 根据不同 key 做不同处理
+      handle_change(tab.id, newValue, oldValue);
+      return
+    }
   }
 });
 
+function handle_change(tab) {
+    chrome.storage.sync.get(['isEnabled','bg_isEnabled'], (settings) => {
+      console.log(settings)
+      if (settings.isEnabled) {
+        if (settings.bg_isEnabled){
+          console.log(` 11111Applying CSS to tab ${tab}.！！！！${TRANSPARENT_CSS_NO_IMG}！！！`);
+          applyOrRemoveCss(tab, TRANSPARENT_CSS_NO_IMG, true)
+        }
+        else {
+          console.log('背景透明back')
+            applyOrRemoveCss(tab, TRANSPARENT_CSS_NO_IMG, false)
+        }
+
+
+      } else {
+        console.log(` 222222Applying CSS to tab ${tab}.`);
+        applyOrRemoveCss(tab, TRANSPARENT_CSS_NO_IMG, false)
+      }
+    });
+}

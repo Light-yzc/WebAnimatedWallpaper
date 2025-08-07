@@ -9,7 +9,6 @@
 
 <div class="container">
   
-  <!-- ... 您其他的设置项保持不变 ... -->
   <div class="setting-item">
     <label for="masterSwitch">启用动态背景</label>
     <label class="switch">
@@ -17,11 +16,12 @@
       <span class="slider round"></span>
     </label>
   </div>
+  <hr>
 
   <div class="setting-item">
-    <label for="imgSwitch">强力去除背景（注意可能会导致部分图标丢失）</label>
+    <label for="bgSwitch">强力去除背景(慎开可能会导致图标丢失和难以阅读)</label>
     <label class="switch">
-      <input type="checkbox" id="imgSwitch">
+      <input type="checkbox" id="bgSwitch">
       <span class="slider round"></span>
     </label>
   </div>
@@ -29,20 +29,20 @@
 
   <div class="setting-item column">
     <div class="label-group">
-      <label for="opacitySlider">页面内容不透明度</label>
+      <label for="opacitySlider">页面内容透明度</label>
       <span id="opacityValue">100%</span>
     </div>
-    <input type="range" id="opacitySlider" min="10" max="100" value="100">
+    <input type="range" id="opacitySlider" min="5" max="100" value="80">
   </div>
-  
+    <hr>
+
   <div class="setting-item column">
     <div class="label-group">
-      <label for="Video_opacitySlider">视频背景不透明度</label>
+      <label for="Video_opacitySlider">视频背景透明度</label>
       <span id="Video_opacityValue">30%</span>
     </div>
-    <input type="range" id="Video_opacitySlider" min="0" max="100" value="30">
+    <input type="range" id="Video_opacitySlider" min="0" max="100" value="80">
   </div>
-
   <hr>
 
   <div class="setting-item column">
@@ -53,7 +53,6 @@
       <button id="saveButton">保存</button>
     </div>
   </div>
-
   <hr>
 
   <div class="setting-item column">
@@ -71,7 +70,10 @@
       </label>
       <span id="file-name-display" class="file-name">未选择文件</span>
     </div>
-
+    <hr>
+    <label>
+      <span style="color: darkgrey;">使用指南：一般调整「页面内容透明度」和「视频背景透明度」就可以获得不错的效果。如果调整这两项还无法显示视频，请开启「强力去除背景」</span>
+    </label>
   </div>
 </div>
 

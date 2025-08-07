@@ -12,12 +12,12 @@ function applyEffects(settings, pageTheme) {
     document.head.appendChild(styleElement);
   }  const backgroundAlpha = 1 - ((settings.video_opacity || 100) / 100);
   const opacity = settings.opacity / 100;
-  styleElement.textContent = `
-    body > *:not(#video-background):not(style):not(script) {
-      opacity: ${opacity} !important;
-    }
-  `;
-
+  // styleElement.textContent = `
+  //   body > *:not(#video-background):not(script) {
+  //     opacity: ${opacity} !important;
+  //   }
+  // `;
+  applyDynamicTransparency(opacity)
   // --- 处理视频 ---
   if (!videoElement) {
     videoElement = document.createElement('video');
@@ -174,6 +174,7 @@ document.addEventListener('visibilitychange', () => {
     if (document.hidden) {
         removeEffects();
     } else {
+        // console.log('创建视频！')
         applyEffects(currentSettings, pageTheme);
     }
   });
@@ -209,6 +210,26 @@ function handle_change_with_promise() {
         resolve(false); 
       }
     });
+  });
+}
+
+function applyDynamicTransparency(alpha = 0.8) {
+  const selector = 'body, div, p, span, a, li, h1, h2, h3, h4, h5, h6, main, article, section, aside, header, footer, table, th, td';
+  const elements = document.querySelectorAll(selector);
+
+  elements.forEach(el => {
+    const computedColor = window.getComputedStyle(el).backgroundColor;
+    const match = computedColor.match(/rgba?\((\d+),\s*(\d+),\s*(\d+)(?:,\s*[\d.]+)?\)/);
+    if (match) {
+      const [r, g, b] = [match[1], match[2], match[3]];
+
+      if (computedColor.includes('rgba') && parseFloat(computedColor.split(',')[3]) === 0) {
+        return;
+      }
+
+      const newColor = `rgba(${r}, ${g}, ${b}, ${alpha})`;
+      el.style.setProperty('background-color', newColor, 'important');
+    }
   });
 }
 

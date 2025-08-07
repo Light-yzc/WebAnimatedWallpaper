@@ -1,7 +1,7 @@
 {
     "manifest_version": 3,
     "name": "动态视频背景",
-    "version": "1.4",
+    "version": "1.5",
     "description": "提供可配置的动态视频背景。",
     "permissions": [
       "storage",

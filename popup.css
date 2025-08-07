@@ -25,7 +25,7 @@
     padding: 20px;
     display: flex;
     flex-direction: column;
-    gap: 18px; /* 统一设置项目间距 */
+    gap: 13px; 
   }
   
   hr {
